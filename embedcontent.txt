@@ -1,0 +1,19 @@
+video links for embed content :
+
+spiderman :
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TcpxaFwozkM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+yomanya, nekogimi :
+<iframe width="560" height="315" src="https://www.youtube.com/embed/F-I8UNBQEK8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+maboroshi koujou :
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NvM28WMdRLQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+vevara in your dream :
+<iframe width="560" height="315" src="https://www.youtube.com/embed/z4lIbrUPcag" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+sukinakoniuso wo tsuita :
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mwcX3YqY32E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+alley dawg :
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Dsl55ZgDGek" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
