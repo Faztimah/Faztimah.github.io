@@ -123,15 +123,22 @@ img {
             keywords: ["榎木淳弥", "音楽"],
             response: "Spotifyリストで大丈夫ですか？またはYoutube?",
         },
-				"Spotifyのリスト": {
-            keywords: ["Spotifyリスト", "大丈夫"],
+				//protected content wihout login if use direct playlist link
+				// spotify track embed also doesn't work well with incognito mode
+				"スポティファイのリスト": {
+            keywords: ["スポティファイリスト", "大丈夫"],
             response: "こちらになります！",
-						webpage : "https://open.spotify.com/playlist/4jqCGrEaqxL7GBMhdw7ea0?si=O4a-qkH5RLunaTnNFY6kgg"
+						webpage : "https://open.spotify.com/artist/4jl9awuZJuOK7UFDFkhHUI?si=448mB0OCQWWYPGAmKKbOSg"
         },
-				"Youtube": {
-            keywords: ["Youtube", "ユーチューブ"],
+				"ユーチューブでお願いします": {
+            keywords: ["ユーチューブ", "ユーチューブ。"],
             response: "じゃ、この曲お勧めですかね！",
-						webpage : "https://youtu.be.com/mwcX3YqY32E"
+						webpage : "https://youtu.be/mwcX3YqY32E"
+        },
+				"Youtubeでお願いします": {
+            keywords: ["Youtubeで", "お願いします"],
+            response: "じゃ、この曲お勧めですかね！",
+						webpage : "https://youtu.be/mwcX3YqY32E"
         },
 				"アニメの役": {
             keywords: ["アニメの役", "どんな役"],
@@ -163,81 +170,111 @@ let output = '';
 
 // 認識結果が出力されたときのイベントハンドラ
 asr.onresult = function(event) {
-        let transcript = event.results[event.resultIndex][0].transcript; // 結果文字列
+    let transcript = event.results[event.resultIndex][0].transcript; // 結果文字列
 
-        let output_not_final = '';
-        if (event.results[event.resultIndex].isFinal) { // 結果が確定（Final）のとき
-				start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/microphone_ui_animation_still_2x.gif?compress=1&resize=450x338&vertical=top';
-            asr.abort(); // 音声認識を停止
+    let output_not_final = '';
+    if (event.results[event.resultIndex].isFinal) { // 結果が確定（Final）のとき
+        start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/microphone_ui_animation_still_2x.gif?compress=1&resize=450x338&vertical=top';
+        asr.abort(); // 音声認識を停止
 
-            let matchedResponse = null;
-            for (let key in response) {
-                let keywords = response[key].keywords;
-                let isMatch = keywords.every(function(keyword) {
-                    return transcript.includes(keyword);
-                });
+        let matchedResponse = null;
+        for (let key in response) {
+            let keywords = response[key].keywords;
+            let isMatch = keywords.every(function(keyword) {
+                return transcript.includes(keyword);
+            });
 
-                if (isMatch) {
-                    matchedResponse = response[key];
-                    break;
-                }
+            if (isMatch) {
+                matchedResponse = response[key];
+                break;
             }
-
-            // Update the code that handles the response
-let answer;
-let webpage;
-let audioSource;
-
-if (matchedResponse === null) {
-  answer = "ごめんなさい。わかりません。";
-} else {
-  answer = matchedResponse.response;
-  webpage = matchedResponse.webpage;
-  audioSource = matchedResponse.audioSource;
-}
-
-output += transcript + ' => ' + answer + '<br>';
-
-if (typeof audioSource !== 'undefined') {
-  // Play audio response
-  const audioPlayer = new Audio(audioSource);
-  audioPlayer.play();
-  audioPlayer.onended = function(event) {
-    asr.start(); // Restart speech recognition
-  };
-} else {
-  // Handle text response
-  tts.text = answer;
-  tts.onend = function(event) {
-    if (typeof webpage !== 'undefined') {
-      const webpageFrame = document.querySelector('#webpageFrame');
-      webpageFrame.src = webpage;
-      webpageFrame.style.display = 'block';
-    }
-			start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/media/02df16d0aca0257ccb028f3cf4c266a7.gif';
-      asr.start(); // Restart speech recognition
-    }
-  };
-                speechSynthesis.speak(tts); // 再生
-            } else { // 結果がまだ未確定のとき
-                output_not_final = '<span style="color:#ddd;">' + transcript + '</span>';
-            }
-            resultOutput.innerHTML = output + output_not_final;
-						
         }
 
-        // 開始ボタンのイベントハンドラ
-        startButton.addEventListener('click', function() {
-            asr.start();
-						start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/media/02df16d0aca0257ccb028f3cf4c266a7.gif';
-        })
+        // Update the code that handles the response
+        let answer;
+        let webpage;
+        let audioSource;
+        let isSpeechRecognitionActive = true;
 
-        // 停止ボタンのイベントハンドラ
-        stopButton.addEventListener('click', function() {
-                asr.abort();
-                asr.stop();
-								start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/microphone_ui_animation_still_2x.gif?compress=1&resize=450x338&vertical=top';
-         })
+        if (matchedResponse === null) {
+            answer = "ごめんなさい。わかりません。";
+        } else {
+            answer = matchedResponse.response;
+            webpage = matchedResponse.webpage;
+            audioSource = matchedResponse.audioSource;
+        }
+
+        output += transcript + ' => ' + answer + '<br>';
+
+        if (typeof audioSource !== 'undefined') {
+            // Play audio response
+            const audioPlayer = new Audio(audioSource);
+            audioPlayer.play();
+            audioPlayer.onended = function(event) {
+                asr.start(); // Restart speech recognition
+            };
+        } else {
+            // Handle text response
+            tts.text = answer;
+            tts.onend = function(event) {
+                if (typeof webpage !== 'undefined') {
+                    const webpageFrame = document.querySelector('#webpageFrame');
+                    webpageFrame.src = webpage;
+                    webpageFrame.style.display = 'block';
+                }
+                start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/media/02df16d0aca0257ccb028f3cf4c266a7.gif';
+                asr.start(); // Restart speech recognition
+            }
+        };
+        speechSynthesis.speak(tts); // 再生
+    } else { // 結果がまだ未確定のとき
+        output_not_final = '<span style="color:#ddd;">' + transcript + '</span>';
+    }
+    resultOutput.innerHTML = output + output_not_final;
+
+}
+
+function runSpotifyAuthorization() {
+  var client_id = '2bf6fa24c78d42a0b0eed700a180ff7b';
+  var redirect_uri = '';
+  var stateKey = 'spotify_auth_state';
+  var state = generateRandomString(16);
+  
+  localStorage.setItem(stateKey, state);
+  var scope = 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private';
+  
+  var url = 'https://accounts.spotify.com/authorize';
+  url += '?response_type=token';
+  url += '&client_id=' + encodeURIComponent(client_id);
+  url += '&scope=' + encodeURIComponent(scope);
+  url += '&redirect_uri=' + encodeURIComponent(redirect_uri);
+  url += '&state=' + encodeURIComponent(state);
+  
+  window.location.href = url;
+}
+
+function generateRandomString(length) {
+  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var randomString = '';
+  for (var i = 0; i < length; i++) {
+    var randomIndex = Math.floor(Math.random() * chars.length);
+    randomString += chars.charAt(randomIndex);
+  }
+  return randomString;
+}
+
+// 開始ボタンのイベントハンドラ
+startButton.addEventListener('click', function() {
+    asr.start();
+    start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/media/02df16d0aca0257ccb028f3cf4c266a7.gif';
+})
+
+// 停止ボタンのイベントハンドラ
+stopButton.addEventListener('click', function() {
+    asr.abort();
+    asr.stop();
+    start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/microphone_ui_animation_still_2x.gif?compress=1&resize=450x338&vertical=top';
+})
 </script>
 
 
