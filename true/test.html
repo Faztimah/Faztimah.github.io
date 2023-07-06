@@ -1,0 +1,241 @@
+<html lang="ja">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<title>榎木淳弥について</title>
+<style>
+body {
+  background: #1e2440;
+  color: #f2efe2;
+}
+.container {
+  position: relative;
+  border: 1px solid #f2efe2;
+  width: 40vw;
+  max-width: 60vw;
+  margin: 0 auto;
+  border-radius: 0.1rem;
+  background: #f2efe2;
+  padding: 0.2rem 1rem;
+  color: #1e2440;
+  margin-top: 10vh;
+	
+	display:grid;
+  justify-content: center;
+  align-items: center;
+}
+.buttons {
+	margin-left : 10vh;
+}
+
+iframe {
+  width: 100%;
+  height: 80vh;
+}
+
+.micgif{
+	width: 100px;
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+	margin-left: 10vh;
+}
+
+img {
+  display: inline;
+  margin: 0 auto;
+	height: 110%;
+  width: auto;
+	margin-left: -22%;
+}
+</style>
+</head>
+<body>
+
+<h1>榎木淳弥のこと、聞いてね！</h1>
+
+<div class = "micgif">
+	<img id = "start_img" src = "https://cdn.dribbble.com/users/2790075/screenshots/5571604/microphone_ui_animation_still_2x.gif?compress=1&resize=450x338&vertical=top" alt = "Start" class="rounded" >
+</div>
+
+<p>
+<button id="startButton">start</button>
+<button id="stopButton">stop</button>
+</p>
+
+<p>
+<div id="resultOutput"></div>
+</p>
+
+<div class = "audio">
+<audio id="audioPlayer" controls style="display: none;"></audio>
+</div>
+
+<iframe id="webpageFrame" style="display: none;"></iframe>
+
+<script >
+
+    // 応答の定義（ハッシュ）
+    var response = {
+        "こんにちは": {
+            keywords: ["こんにちは"],
+            response: "ハローハローようこそ！"
+        },
+        "名前は": {
+            keywords: ["あなたの名前は"],
+            response: "榎木淳弥ボットでーす"
+        },
+        "何歳": {
+            keywords: ["何歳"],
+            response: "今年、榎木淳弥さんは35歳です！"
+        },
+        "誰": {
+            keywords: ["誰ですか"],
+            response: "日本の声優さんですね"
+        },
+        "好きな色": {
+            keywords: ["好きな", "色"],
+            response: "オレンジです"
+        },
+        "夢は": {
+            keywords: ["夢は"],
+						response : "こちらですね！",
+            audioSource : "enojun.mp3"
+        },
+        "好きなスポーツ": {
+            keywords: ["好きな", "スポーツ"],
+            response: "けん玉です"
+        },
+        "好きな食べ物": {
+            keywords: ["好きな", "食べ物"],
+            response: "焼肉です"
+        },
+        "朗読": {
+            keywords: ["榎木淳弥", "朗読"],
+            response: "朗読といえば、よまにゃちゃんねるですね！",
+            webpage: "https://youtu.be/F-I8UNBQEK8"
+        },
+        "大阪の天気": {
+            keywords: ["大阪", "天気"],
+            response: "大阪府の天気予報を表示します",
+            webpage: "https://weather.yahoo.co.jp/weather/jp/27/"
+        }
+    };
+
+const startButton = document.querySelector('#startButton'); // 開始ボタン
+const stopButton = document.querySelector('#stopButton'); // 停止ボタン
+const resultOutput = document.querySelector('#resultOutput'); // 結果出力エリア
+const audioPlayer = document.querySelector('#audioPlayer');
+
+if (!'SpeechSynthesisUtterance' in window) {
+    alert("あなたのブラウザはSpeech Synthesis APIに未対応です。");
+}
+const tts = new SpeechSynthesisUtterance(); // TTSインスタンスを生成
+tts.lang = "ja-JP"; // 言語(日本語)```javascript
+const asr = new webkitSpeechRecognition(); // 音声認識インスタンスを生成
+asr.lang = "ja-JP"; // 言語(日本語)
+asr.continuous = true; // 連続認識モードに設定
+asr.interimResults = true; // 途中結果を取得するよう設定
+
+// 変数の初期化
+let output = '';
+
+// 認識結果が出力されたときのイベントハンドラ
+asr.onresult = function(event) {
+        let transcript = event.results[event.resultIndex][0].transcript; // 結果文字列
+
+        let output_not_final = '';
+        if (event.results[event.resultIndex].isFinal) { // 結果が確定（Final）のとき
+				start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/microphone_ui_animation_still_2x.gif?compress=1&resize=450x338&vertical=top';
+            asr.abort(); // 音声認識を停止
+
+            let matchedResponse = null;
+            for (let key in response) {
+                let keywords = response[key].keywords;
+                let isMatch = keywords.every(function(keyword) {
+                    return transcript.includes(keyword);
+                });
+
+                if (isMatch) {
+                    matchedResponse = response[key];
+                    break;
+                }
+            }
+
+            // Update the code that handles the response
+let answer;
+let webpage;
+let audioSource;
+
+if (matchedResponse === null) {
+  answer = "ごめんなさい。わかりません。";
+} else {
+  answer = matchedResponse.response;
+  webpage = matchedResponse.webpage;
+  audioSource = matchedResponse.audioSource;
+}
+
+output += transcript + ' => ' + answer + '<br>';
+
+if (typeof audioSource !== 'undefined') {
+  // Play audio response
+  const audioPlayer = new Audio(audioSource);
+  audioPlayer.play();
+  audioPlayer.onended = function(event) {
+    asr.start(); // Restart speech recognition
+  };
+} else {
+  // Handle text response
+  tts.text = answer;
+  tts.onend = function(event) {
+    if (typeof webpage !== 'undefined') {
+      const webpageFrame = document.querySelector('#webpageFrame');
+      webpageFrame.src = webpage;
+      webpageFrame.style.display = 'block';
+    }
+			start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/media/02df16d0aca0257ccb028f3cf4c266a7.gif';
+      asr.start(); // Restart speech recognition
+    }
+  };
+                speechSynthesis.speak(tts); // 再生
+            } else { // 結果がまだ未確定のとき
+                output_not_final = '<span style="color:#ddd;">' + transcript + '</span>';
+            }
+            resultOutput.innerHTML = output + output_not_final;
+						
+        }
+
+        // 開始ボタンのイベントハンドラ
+        startButton.addEventListener('click', function() {
+            asr.start();
+						start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/media/02df16d0aca0257ccb028f3cf4c266a7.gif';
+        })
+
+        // 停止ボタンのイベントハンドラ
+        stopButton.addEventListener('click', function() {
+                asr.abort();
+                asr.stop();
+								start_img.src = 'https://cdn.dribbble.com/users/2790075/screenshots/5571604/microphone_ui_animation_still_2x.gif?compress=1&resize=450x338&vertical=top';
+         })
+
+audioPlayer.addEventListener('click', function() {
+  if (audioPlayer.paused) {
+    audioPlayer.play();
+  } else {
+    audioPlayer.pause();
+  }
+});
+
+audioPlayer.onended = function(event) {
+  audioPlayer.currentTime = 0;
+};
+
+</script>
+
+
+
+</body>
+</html>
