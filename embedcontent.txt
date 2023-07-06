@@ -21,3 +21,9 @@ alley dawg :
 https://www.atomicmonkey.jp/talent/enokijunya
 https://www.atomicmonkey.jp/atmnadmin-corporate/wp-content/uploads/2021/01/c919f0df0df269be39f3b0b378ac40e3.mp3
 https://twitter.com/enojunjunjun
+
+https://open.spotify.com/artist/4jl9awuZJuOK7UFDFkhHUI?si=448mB0OCQWWYPGAmKKbOSg
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/artist/4jl9awuZJuOK7UFDFkhHUI?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+https://open.spotify.com/show/1OApR2wyRtWRAydfmg3Vto?si=b50a78ca9e6f4247
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/1OApR2wyRtWRAydfmg3Vto?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
