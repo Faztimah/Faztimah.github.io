@@ -189,7 +189,10 @@ asr.onresult = function(event) {
                 break;
             }
         }
-
+				
+				if (transcript.includes('spotify') || transcript.includes('スポティファイ')) {
+						runAuthorization(); // Run the authorization code
+				} else {
         // Update the code that handles the response
         let answer;
         let webpage;
@@ -262,6 +265,9 @@ function generateRandomString(length) {
   }
   return randomString;
 }
+
+
+
 
 // 開始ボタンのイベントハンドラ
 startButton.addEventListener('click', function() {
