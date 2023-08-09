@@ -1,6 +1,3 @@
-import './style.css'
-import enokyunLogo from '/enokyun.png'
-
 window.onload = function() {
       setTimeout(function() {
         // Hide the warning element after a delay (e.g., 3 seconds)
@@ -11,7 +8,7 @@ window.onload = function() {
 
 document.querySelector('#app').innerHTML = `
       <div>
-          <img src="${enokyunLogo}" class="logo" alt="enokyun logo" style="width: 135px; height: auto;" /></div>
+          <img src="/src/enokyun.png" class="logo" alt="enokyun logo" style="width: 135px; height: auto;" /></div>
 						<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
 						<strong style="padding: 10px" id="drag2" draggable="true" ondragstart="drag(event)">誕生日</strong>
 						<strong style="padding: 10px" id="drag2" draggable="true" ondragstart="drag(event)">出身</strong>
